@@ -23,7 +23,11 @@ type WorkflowRequestType record {
     string workflowID;
     WorkflowRequestTypeVarible[] variables;
 };
+type WorkflowEngineType record {
+   string TYPE;
+};
 configurable CallBackConfig callbackconfig = ?;
+
 
 service / on new http:Listener(8090) {
 
@@ -31,11 +35,10 @@ service / on new http:Listener(8090) {
 
         json requestWorkflowPayload = check request.getJsonPayload();
          WorkflowRequestType workflowRequestType = check requestWorkflowPayload.cloneWithType(WorkflowRequestType);
-        // Extract the "name" parameter from the URL
      
-            CamundaService camundaProfile = new CamundaService();
+            WorkflowEngine workflowEngine = check createWorkflowEngine(workflow_engine_config.TYPE);
 
-            any workflowInitializer = check camundaProfile.workflowInitializer(workflowRequestType);
+            any workflowInitializer = check workflowEngine.workflowInitializer(workflowRequestType);
             check caller->respond(workflowInitializer.toString());
        
        

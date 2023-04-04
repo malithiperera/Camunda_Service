@@ -17,30 +17,31 @@ type CamundaOutputType record {
 };
 
 type DefinitionID record {
-    string workflowID ?;
-    string processDefinitionID;
+    string identity_server_workflow_id ?;
+    string workflow_engine_workflow_id;
 };
 
 type CamundaConfig record {|
-    string CAMUNDA_ENGINE_URL;
+string TYPE;
+    string ENGINE_URL;
 
 |};
 
-configurable CamundaConfig camundaconfig = ?;
-configurable DefinitionID[] camundaWorkflowConfigs = ?;
+configurable CamundaConfig workflow_engine_config = ?;
+configurable DefinitionID[] workflow_configs = ?;
 
-distinct service class CamundaService {
+distinct service class CamundaWorkflowEngine {
 
-    *BPSProfile;
+    *WorkflowEngine;
 
     private string engineURL;
 
     private DefinitionID[] definitionIDs;
 
     function init() {
-        self.engineURL = camundaconfig.CAMUNDA_ENGINE_URL;
+        self.engineURL = workflow_engine_config.ENGINE_URL;
 
-        self.definitionIDs = camundaWorkflowConfigs;
+        self.definitionIDs = workflow_configs;
     }
 
     # Description
@@ -51,8 +52,8 @@ distinct service class CamundaService {
         string workflowID = workflowRequestType.workflowID;
         string workflowDefinitionID = "";
         foreach var item in self.definitionIDs {
-            if (item["workflowID"] == workflowID) {
-                workflowDefinitionID = item["processDefinitionID"];
+            if (item["identity_server_workflow_id"] == workflowID) {
+                workflowDefinitionID = item["workflow_engine_workflow_id"];
                 break;
             }
 
@@ -88,7 +89,5 @@ distinct service class CamundaService {
         }
         return outputType;
     }
-    public function callbackProcessHandler() {
-        return;
-    }
+  
 }

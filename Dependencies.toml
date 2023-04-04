@@ -270,17 +270,6 @@ dependencies = [
 ]
 
 [[package]]
-org = "ballerina"
-name = "xmldata"
-version = "2.3.2"
-dependencies = [
-	{org = "ballerina", name = "jballerina.java"}
-]
-modules = [
-	{org = "ballerina", packageName = "xmldata", moduleName = "xmldata"}
-]
-
-[[package]]
 org = "ballerinai"
 name = "observe"
 version = "0.0.0"
@@ -299,7 +288,6 @@ version = "3.1.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
 	{org = "ballerina", name = "mime"},
-	{org = "ballerina", name = "xmldata"},
 	{org = "ballerinai", name = "observe"}
 ]
 modules = [
