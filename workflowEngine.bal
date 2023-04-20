@@ -1,8 +1,9 @@
 type WorkflowEngine distinct service object {
    
-
-    // Defines the field `name` as a resource method definition.
-
-    public function workflowInitializer(WorkflowRequestType workflowRequestType) returns any | error;
+    # Description
+    #
+    # + workflowRequestType - Workflow Request type recived from identity server
+    # + return - Any type of value or error
+    public function workflowInitializer(WorkflowRequest workflowRequestType) returns any | error;
     
 };

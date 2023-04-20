@@ -1,17 +1,13 @@
+#Provide the workflow engine configuration details here
+
+#TYPE = Exetrnal workflow engine type
+#ENGINE_URL = External workflow engine url 
 [workflow_engine_config]
 TYPE = "camunda"
 ENGINE_URL = "http://localhost:8080/engine-rest/process-definition"
 
-[[workflow_configs]]
- identity_server_workflow_id = "5896610a-4039-4c09-a843-c3027cf8272e"
-workflow_engine_workflow_id = "Useradd:2:343e0712-d1d6-11ed-88bc-9e29762f7844"
-
-[[workflow_configs]]
- identity_server_workflow_id= "5896610a-4039-4c09-a843-c3027cf8272euu"
-workflow_engine_workflow_id="Useradd:1:3ff03477-c970-11ed-9db5-9e29762f7844"
-
-
+#Provide the callback configuration details here
 [callbackconfig]
-CALLBACK_END_POINT = "https://c8bd-2402-d000-a400-3bab-604d-c323-f004-c281.in.ngrok.io/api/server/v1/workflow/"
+CALLBACK_END_POINT = "http://localhost:9763/api/server/v1/workflow/"
 
 

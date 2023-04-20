@@ -4,7 +4,7 @@ import ballerina/mime;
 //callback record
 
 type CallbackCamunda record {
-    string processDefinitionId;
+    string requestID;
     string status;
 
 };
@@ -13,15 +13,20 @@ type CallBackConfig record {
     string CALLBACK_END_POINT;
 
 };
-type WorkflowRequestTypeVarible record {
+public type WorkflowRequestVarible record {
     string name;
     string value;
 };
 
-type WorkflowRequestType record {
-    string processDefinitionId;
+# Description
+#
+# + requestId - Request Idenitifier and this use for callback function  
+# + workflowID - External workflow Identifier   
+# + variables - List of varibles which recived from the request
+public type WorkflowRequest record {
+    string requestId;
     string workflowID;
-    WorkflowRequestTypeVarible[] variables;
+    WorkflowRequestVarible[] variables;
 };
 type WorkflowEngineType record {
    string TYPE;
@@ -34,7 +39,7 @@ service / on new http:Listener(8090) {
     resource function post .(http:Caller caller, http:Request request) returns error? {
 
         json requestWorkflowPayload = check request.getJsonPayload();
-         WorkflowRequestType workflowRequestType = check requestWorkflowPayload.cloneWithType(WorkflowRequestType);
+         WorkflowRequest workflowRequestType = check requestWorkflowPayload.cloneWithType(WorkflowRequest);
      
             WorkflowEngine workflowEngine = check createWorkflowEngine(workflow_engine_config.TYPE);
 
@@ -45,18 +50,18 @@ service / on new http:Listener(8090) {
 
     }
 
-    resource function post CallbackEndPoint(http:Caller caller, http:Request request) returns error? {
+    resource function post Callback(http:Caller caller, http:Request request) returns error? {
         http:Client CallbackIS = check new (callbackconfig.CALLBACK_END_POINT);
 
         json callbackPayload = check request.getJsonPayload();
         CallbackCamunda inputRecord = check callbackPayload.cloneWithType(CallbackCamunda);
-        string processuuid = inputRecord.processDefinitionId;
+        string requestID = inputRecord.requestID;
         json payload = {
             "status": inputRecord.status
         };
 
         map<string> headers = {"Content-Type": mime:APPLICATION_JSON};
-        http:Response res = check CallbackIS->patch(processuuid, payload, headers);
+        http:Response res = check CallbackIS->patch(requestID, payload, headers);
 
         check caller->respond(res.statusCode);
 
